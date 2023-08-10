@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "test-django"
+version = "0.1.0"
+description = ""
+authors = ["Victor Augusto <victor.oliveira@onidata.com>"]
+readme = "README.md"
+packages = [{include = "test_django"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+django = "^4.2.4"
+python-decouple = "^3.8"
+dj-database-url = "^2.0.0"
+django-extensions = "^3.2.3"
+psycopg2-binary = "^2.9.7"
+gunicorn = "^21.2.0"
+redis = "^4.6.0"
+
+
+[tool.poetry.group.dev.dependencies]
+model-bakery = "^1.13.0"
+pytest-django = "^4.5.2"
+black = "^23.7.0"
+pre-commit = "^3.3.3"
+django-debug-toolbar = "^4.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "projeto.settings"
+python_files = ["test_*.py", "*_test.py", "testing/python/*.py"]
+
+[tool.isort]
+profile = "hug"
+src_paths = ["isort", "test"]
