@@ -13,9 +13,7 @@ from functools import partial
 from pathlib import Path
 
 import dj_database_url
-import sentry_sdk
 from decouple import Csv, config
-from sentry_sdk.integrations.django import DjangoIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -147,9 +145,21 @@ if DEBUG:
     INSTALLED_APPS.append("debug_toolbar")
     MIDDLEWARE.insert(0, "debug_toolbar.middleware.DebugToolbarMiddleware")
 else:
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
     sentry_sdk.init(
         dsn=config("SENTRY_DSN"),
         integrations=[DjangoIntegration()],
         traces_sample_rate=1.0,
         send_default_pii=True,
     )
+
+    import beeline
+
+    beeline.init(
+        writekey=config("HONEYCOMB_API_KEY"),
+        service_name="django-apm-tests",
+        # debug=True, # defaults to False. if True, data doesn't get sent to Honeycomb
+    )
+    MIDDLEWARE.append("beeline.middleware.django.HoneyMiddleware")
