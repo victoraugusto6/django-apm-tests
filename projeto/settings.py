@@ -154,12 +154,3 @@ else:
         traces_sample_rate=1.0,
         send_default_pii=True,
     )
-
-    import beeline
-
-    beeline.init(
-        writekey=config("HONEYCOMB_API_KEY"),
-        service_name="django-apm-tests",
-        # debug=True, # defaults to False. if True, data doesn't get sent to Honeycomb
-    )
-    MIDDLEWARE.append("beeline.middleware.django.HoneyMiddleware")
