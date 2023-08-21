@@ -2,7 +2,6 @@ services:
   database:
     container_name: database
     image: postgres:13.10
-    restart: always
     environment:
       - LC_ALL=C.UTF-8
       - POSTGRES_USER=postgres
