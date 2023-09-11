@@ -13,6 +13,34 @@ def test_get_authors(api_client, user):
     assert response.data["results"][0]["name"] == author.name
 
 
+def test_get_authors_using_search(api_client, user):
+    author_1 = baker.make(Author, name="Author 1")
+    baker.make(Author, name="Author 2")
+
+    api_client.credentials(HTTP_AUTHORIZATION=f"Token {user.auth_token.key}")
+    response = api_client.get(
+        reverse("core:author-list-create"), data={"search": "Author 1"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["count"] == 1
+    assert response.data["results"][0]["name"] == author_1.name
+
+
+def test_get_authors_using_ordering(api_client, user):
+    baker.make(Author, name="Author 2")
+    baker.make(Author, name="Author 3")
+    baker.make(Author, name="Author 1")
+
+    api_client.credentials(HTTP_AUTHORIZATION=f"Token {user.auth_token.key}")
+    response = api_client.get(
+        reverse("core:author-list-create"), data={"ordering": "name"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["results"][0]["name"] == "Author 1"
+    assert response.data["results"][1]["name"] == "Author 2"
+    assert response.data["results"][2]["name"] == "Author 3"
+
+
 def test_get_author(api_client, user):
     author = baker.make(Author)
 

@@ -15,6 +15,34 @@ def test_get_books(api_client, user):
     assert response.data["results"][0]["title"] == book.title
 
 
+def test_get_books_using_search(api_client, user):
+    book_1 = baker.make(Book, title="Book 1")
+    baker.make(Book, title="Book 2")
+
+    api_client.credentials(HTTP_AUTHORIZATION=f"Token {user.auth_token.key}")
+    response = api_client.get(
+        reverse("core:book-list-create"), data={"search": "Book 1"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["count"] == 1
+    assert response.data["results"][0]["title"] == book_1.title
+
+
+def test_get_books_using_ordering(api_client, user):
+    baker.make(Book, title="Book 2")
+    baker.make(Book, title="Book 3")
+    baker.make(Book, title="Book 1")
+
+    api_client.credentials(HTTP_AUTHORIZATION=f"Token {user.auth_token.key}")
+    response = api_client.get(
+        reverse("core:book-list-create"), data={"ordering": "title"}
+    )
+    assert response.status_code == status.HTTP_200_OK
+    assert response.data["results"][0]["title"] == "Book 1"
+    assert response.data["results"][1]["title"] == "Book 2"
+    assert response.data["results"][2]["title"] == "Book 3"
+
+
 def test_get_book(api_client, user):
     author = baker.make(Author)
     book = baker.make(Book)
