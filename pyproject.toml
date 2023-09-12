@@ -1,13 +1,13 @@
 [tool.poetry]
-name = "test-django"
+name = "django-metrics-honeycomb"
 version = "0.1.0"
 description = ""
-authors = ["Victor Augusto <victor.oliveira@onidata.com>"]
+authors = ["Victor Augusto <victor.augusto.soliveira@gmail.com>"]
 readme = "README.md"
-packages = [{ include = "test_django" }]
+packages = [{ include = "django-metrics-honeycomb" }]
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.11"
 django = "^4.2.4"
 python-decouple = "^3.8"
 dj-database-url = "^2.0.0"
