@@ -90,11 +90,13 @@ REDIS_URL = config("REDIS_URL", default="redis://localhost")
 
 CACHES = {
     "default": {
-        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "BACKEND": config(
+            "CACHE_BACKEND", default="django.core.cache.backends.redis.RedisCache"
+        ),
         "LOCATION": [REDIS_URL],
     }
 }
-CACHE_TTL = 60 * 15
+CACHE_TTL = 10
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators

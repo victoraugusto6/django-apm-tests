@@ -1,3 +1,6 @@
+from django.conf import settings
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import generics
 from rest_framework.authentication import TokenAuthentication
@@ -15,7 +18,11 @@ class AuthorListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
     search_fields = ["name"]
-    ordering_fields = ["name"]
+    ordering_fields = ["name", "id"]
+
+    @method_decorator(cache_page(settings.CACHE_TTL))
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class AuthorRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
